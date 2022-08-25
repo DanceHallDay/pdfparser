@@ -8,10 +8,15 @@ namespace py = pybind11;
 
 struct text_data {
     std::string text;
+
+    std::string fontname;
+    double fontsize;
+
     double x;
     double y;
     double height;
     double width;
+
     int page;
 };
 
@@ -56,6 +61,8 @@ class PDF {
         text_data to_textdata(poppler::text_box &tb, int page_nmbr) {
             text_data td;
             td.text = to_stdstring(tb.text());
+            td.fontsize = tb.get_font_size();
+            td.fontname = tb.get_font_name();
             td.x = tb.bbox().x();
             td.y = tb.bbox().y();
             td.height = tb.bbox().height();
@@ -69,6 +76,8 @@ class PDF {
 PYBIND11_MODULE(pdf2text, m) {
     py::class_<text_data>(m, "TextData")
         .def_readwrite("text", &text_data::text)
+        .def_readwrite("fontname", &text_data::fontname)
+        .def_readwrite("fontsize", &text_data::fontsize)
         .def_readwrite("x", &text_data::x)
         .def_readwrite("y", &text_data::y)
         .def_readwrite("height", &text_data::height)
