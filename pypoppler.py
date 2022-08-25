@@ -1,13 +1,7 @@
-import pdfparser.pdf2text as p2t
+from pdfparser.pdf2text import PDF
 
-a = p2t.get_text_data("pdf path")
-a = " ".join([str(i.text) for i in a])
-"""
-other attributes:
-x
-y
-width
-height
-page
-"""
-print(a)
+pdf = PDF("/home/nktrn/Downloads/CV+Nikita+Aparovich.pdf")
+pn = pdf.get_page_number()
+print(pn)
+td = pdf.get_text_data()
+print(td[0].width)
