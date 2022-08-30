@@ -1,10 +1,19 @@
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
+#include "pybind11/numpy.h"
+
 #include "poppler/cpp/poppler-document.h"
 #include "poppler/cpp/poppler-page.h"
+#include "poppler/cpp/poppler-page-renderer.h"
+#include "poppler/cpp/poppler-image.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
 
 
 namespace py = pybind11;
+
 
 struct text_data {
     std::string text;
@@ -16,7 +25,6 @@ struct text_data {
     double y;
     double height;
     double width;
-
     int page;
 };
 
@@ -24,10 +32,13 @@ struct text_data {
 class PDF {
     private: 
         poppler::document* doc;
+        poppler::page_renderer pr;
 
     public: 
         PDF(std::string &filename) {
             doc = poppler::document::load_from_file(filename);
+            poppler::page_renderer pr = poppler::page_renderer();
+            pr.set_image_format(poppler::image::format_rgb24);
         }
 
         const int get_page_number() {
@@ -46,6 +57,13 @@ class PDF {
             py::list res = py::cast(td);
             return res;
         }
+
+        py::bytes render_word(int page_number, double x, double y, double w, double h) {
+            poppler::image word_img = pr.render_page(read_page(page_number), 72, 72, x, y, w, h);
+            size_t size = word_img.bytes_per_row() * word_img.height();
+            return py::bytes(word_img.data(), size);
+        }
+                
 
     
     private:
@@ -74,6 +92,8 @@ class PDF {
 
 
 PYBIND11_MODULE(pdf2text, m) {
+    py::module::import("pdfparser");
+    m.doc() = "This is a Python binding of C++ Maia Library";
     py::class_<text_data>(m, "TextData")
         .def_readwrite("text", &text_data::text)
         .def_readwrite("fontname", &text_data::fontname)
@@ -87,5 +107,6 @@ PYBIND11_MODULE(pdf2text, m) {
     py::class_<PDF>(m, "PDF")
         .def(py::init<std::string &>())
         .def("get_page_number", &PDF::get_page_number)
-        .def("get_text_data", &PDF::get_textdata);
+        .def("get_text_data", &PDF::get_textdata)
+        .def("render_word", &PDF::render_word);
 }
