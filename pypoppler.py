@@ -1,11 +1,6 @@
-import pdfparser.pdf2text as p
-import numpy as np
-from PIL import Image
-import io
+from pdfparser.cpp.build.pdf2text import PDF
 
-#pdf =p.PDF("/home/nktrn/Downloads/CV+Nikita+Aparovich.pdf")
-pdf =p.PDF("/home/nktrn/Downloads/test.pdf")
-
+pdf = PDF("/home/nktrn/Downloads/CV+Nikita+Aparovich.pdf")
 pn = pdf.get_page_number()
 
 td = pdf.get_text_data()
