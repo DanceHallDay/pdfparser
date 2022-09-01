@@ -1,5 +1,15 @@
 from PIL import Image, ImageDraw, ImageFont
 
+class WordGenerator():
+    def __init__(self,minLength=1,maxLength=10):
+        self.generator = Wordnik()
+        self.generator_params = {
+            "minLength": minLength,
+            "maxLength": maxLength,
+        }
+
+    def generate_word(self, words_num=1):
+        return self.generator.get_random_word(**self.generator_params)
 
 def render_word(txt):
     font = ImageFont.truetype('fonts/Yacimiento ExtraBold Ex.ttf', size=42)
