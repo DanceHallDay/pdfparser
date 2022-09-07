@@ -37,7 +37,7 @@ class PDF {
     public: 
         PDF(std::string &filename) {
             doc = poppler::document::load_from_file(filename);
-            poppler::page_renderer pr = poppler::page_renderer();
+            poppler::page_renderer pr;
             pr.set_image_format(poppler::image::format_rgb24);
         }
 
@@ -49,6 +49,7 @@ class PDF {
             std::vector<text_data> td;
             for(int i=0; i<get_page_number(); i++) {
                 poppler::page* page = read_page(i);
+                
                 std::vector<poppler::text_box> tb = page->text_list();
                 for(auto & j : tb) {
                     td.push_back(to_textdata(j, i));
