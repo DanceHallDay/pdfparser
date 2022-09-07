@@ -38,7 +38,7 @@ class PDF {
         PDF(std::string &filename) {
             doc = poppler::document::load_from_file(filename);
             poppler::page_renderer pr;
-            pr.set_image_format(poppler::image::format_rgb24);
+            pr.set_image_format(poppler::image::format_gray8);
         }
 
         const int get_page_number() {
@@ -59,10 +59,25 @@ class PDF {
             return res;
         }
 
-        py::bytes render_word(int page_number, double x, double y, double w, double h) {
+        py::list render_word(int page_number, double x, double y, double w, double h) {
             poppler::image word_img = pr.render_page(read_page(page_number), 72, 72, x, y, w, h);
             size_t size = word_img.bytes_per_row() * word_img.height();
-            return py::bytes(word_img.data(), size);
+
+            char* s = word_img.data();
+
+            std::vector<std::vector<int>> img_vec;
+
+            for(size_t i=0; i < word_img.height(); i++) {
+                std::vector<int> tmp;
+                for(size_t j=0; j < word_img.bytes_per_row(); j++){
+                    tmp.push_back((s[i * word_img.height() + j] >> 24) & 0xFF);
+                }
+                img_vec.push_back(tmp);
+            }
+
+            py::list res = py::cast(img_vec);
+
+            return res;
         }
                 
 
