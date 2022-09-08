@@ -38,7 +38,8 @@ class PDF {
         PDF(std::string &filename) {
             doc = poppler::document::load_from_file(filename);
             poppler::page_renderer pr;
-            pr.set_image_format(poppler::image::format_gray8);
+            pr.set_render_hint(poppler::page_renderer::render_hint::text_hinting);
+            //pr.set_image_format(poppler::image::format_gray8);
         }
 
         const int get_page_number() {
@@ -59,24 +60,28 @@ class PDF {
             return res;
         }
 
-        py::list render_word(int page_number, double x, double y, double w, double h) {
-            poppler::image word_img = pr.render_page(read_page(page_number), 72, 72, x, y, w, h);
+        py::list render_word(int page_number, double x, double y, double w, double h, double resolution) {
+            x = resolution * x / 72;
+            y = resolution * y / 72;
+            w = resolution * w / 72;
+            h = resolution * h / 72;
+
+            poppler::image word_img = pr.render_page(read_page(page_number), resolution, resolution, x, y, w, h);
             size_t size = word_img.bytes_per_row() * word_img.height();
-
             char* s = word_img.data();
-
-            std::vector<std::vector<int>> img_vec;
-
-            for(size_t i=0; i < word_img.height(); i++) {
-                std::vector<int> tmp;
-                for(size_t j=0; j < word_img.bytes_per_row(); j++){
-                    tmp.push_back((s[i * word_img.height() + j] >> 24) & 0xFF);
+            std::vector<std::vector<std::vector<int>>> img_vec;
+            for(size_t i=0; i < size; i=i+word_img.width() * 4) {
+                std::vector<std::vector<int>> tmp1;
+                for(size_t j=0; j < word_img.bytes_per_row(); j=j+4){
+                    std::vector<int> tmp2;
+                    for(int k=0; k<4; k++) {
+                        tmp2.push_back((s[i + j + k]) & 0xFF);
+                    }
+                    tmp1.push_back(tmp2);
                 }
-                img_vec.push_back(tmp);
+                img_vec.push_back(tmp1);
             }
-
             py::list res = py::cast(img_vec);
-
             return res;
         }
                 
