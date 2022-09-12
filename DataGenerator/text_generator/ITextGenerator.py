@@ -8,7 +8,7 @@ import numpy as np
 from typing import List, Tuple
 
 
-class ITextGenerator:
+class ITextGenerator(ABC):
     def initialize(
         self,
         fonts: Tuple[List[IFont], np.array],
