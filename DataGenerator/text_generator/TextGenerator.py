@@ -1,7 +1,7 @@
 from ITextGenerator import *
 
 class TextGenerator(ITextGenerator):
-    def initialize(
+    def __init__(
         self,
         fonts: Tuple[List[IFont], np.array],
         font_sizes: Tuple[List[int], np.array],

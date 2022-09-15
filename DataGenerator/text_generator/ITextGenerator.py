@@ -1,8 +1,4 @@
 from abc import ABC
-#add word_generator path to PYTHONPATH
-import sys
-sys.path.append('/home/ivan/pdfparser-2')
-
 from DataGenerator.word_generator.IFont import IFont
 from DataGenerator.word_generator.IVisualAugmenter import IVisualAugmenter
 from DataGenerator.word_generator.IWordGenerator import IWordGenerator
