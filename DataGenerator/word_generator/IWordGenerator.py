@@ -3,7 +3,7 @@ from typing import List
 
 
 class IWordGenerator(ABC):
-    def word_generate(self, text_space: List[str], case: int, *args, **kwargs) -> str:
+    def word_generate(self, case: int, *args, **kwargs) -> str:
         """
         generate random a word from @text_space with a specific formatting,
         that is setted by @case variable:
