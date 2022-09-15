@@ -1,4 +1,8 @@
 from abc import ABC
+#add word_generator path to PYTHONPATH
+import sys
+sys.path.append('/home/ivan/pdfparser-2')
+
 from DataGenerator.word_generator.IFont import IFont
 from DataGenerator.word_generator.IVisualAugmenter import IVisualAugmenter
 from DataGenerator.word_generator.IWordGenerator import IWordGenerator
@@ -7,7 +11,7 @@ import numpy as np
 from typing import List, Tuple
 
 class ITextGenerator(ABC):
-    def initialize(
+    def __init__(
         self,
         fonts: Tuple[List[IFont], np.array],
         font_sizes: Tuple[List[int], np.array],
@@ -16,7 +20,7 @@ class ITextGenerator(ABC):
         word_renderer: IWordRenderer,
         *args,
         **kwargs
-    ) -> None:
+    ):
         """
         Set up generator settings.
         @fonts - tuple of fonts and their PDF fucntion,
