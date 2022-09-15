@@ -3,10 +3,8 @@ from DataGenerator.word_generator.IFont import IFont
 from DataGenerator.word_generator.IVisualAugmenter import IVisualAugmenter
 from DataGenerator.word_generator.IWordGenerator import IWordGenerator
 from DataGenerator.word_generator.IWordRenderer import IWordRenderer
-
 import numpy as np
 from typing import List, Tuple
-
 
 class ITextGenerator(ABC):
     def initialize(
