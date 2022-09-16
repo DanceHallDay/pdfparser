@@ -2,6 +2,7 @@ from IWordGenerator import IWordGenerator
 from typing import List
 import re
 import numpy as np
+import os
 
 class WordGenerator(IWordGenerator):
     def __init__(self):
@@ -20,6 +21,10 @@ class WordGenerator(IWordGenerator):
         return word
 
     def word_storage_load(self, path: str, vocab: str, *args, **kwargs) -> None:
+        if not os.path.isfile(path) or not (path.lower().endswith('.wl') or path.lower().endswith('.txt')):
+            raise OSError("only .wl and .txt fonts can be used")
+
+        #replace all characters that aren't in the vocab with a character ''
         with open(path, "r") as f:
             self.__words.extend(
                 [
