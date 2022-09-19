@@ -45,6 +45,6 @@ class WordRenderer(IWordRenderer):
         img_arr = np.array(img, dtype='uint8')
 
         for augmenter in augmenters:
-            img_arr = augmenter.augment(img_arr)
+            img_arr, starts_x, ends_x = augmenter.augment(img_arr, starts_x=starts_x, ends_x=ends_x)
 
         return img_arr, word, starts_x, ends_x
