@@ -6,7 +6,7 @@ from einops.layers.torch import Rearrange, Reduce
 import torch.nn.functional as F
 
 class PatchEmbeddingBlock(nn.Module):
-    def __init__(self, feature_extraction_model = None, num_words : int = 8, emb_size : int = 64): 
+    def __init__(self, feature_extraction_model = None, num_words : int = 32, emb_size : int = 64): 
         super(PatchEmbeddingBlock, self).__init__()
         self.projection = nn.Sequential(
             Rearrange('b n c h w -> (b n) c h w'),# batch_size, num_words, chanels, height, width
@@ -66,7 +66,7 @@ class ResBlock(nn.Module):
     
     
 class FeedForwardBlock(nn.Sequential):
-    def __init__(self, emb_size : int = 8, expapansion : int = 4, dropout : float = 0):
+    def __init__(self, emb_size : int = 64, expapansion : int = 4, dropout : float = 0):
         super(FeedForwardBlock, self).__init__(
             nn.Linear(emb_size, expapansion * emb_size),
             nn.GELU(),
@@ -92,7 +92,7 @@ class TransformerBlock(nn.Sequential):
        
         
 class BoldClassifier(nn.Sequential):
-    def __init__(self, feature_extraction_model = None, depth : int = 4, emb_size : int = 64, num_words : int = 8, num_heads : int = 2,  forward_expansion : int = 3, **kwargs):
+    def __init__(self, feature_extraction_model = None, depth : int = 4, emb_size : int = 64, num_words : int = 32, num_heads : int = 2,  forward_expansion : int = 3, **kwargs):
         super(BoldClassifier, self).__init__(
             PatchEmbeddingBlock(feature_extraction_model, num_words, emb_size),
             *[TransformerBlock(num_heads, emb_size, forward_expansion,**kwargs) for _ in range(depth)],
