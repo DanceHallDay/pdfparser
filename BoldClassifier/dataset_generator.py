@@ -90,13 +90,14 @@ class SequenceGenerator:
         
     def generate_sequence(
         self, sequence_len: int
-    ) -> List[Union[IWordRenderer.word_render, bool, str]]:
+    ) -> List[Union[IWordRenderer.word_render, int]]:
         sequences = []
         font = random.choice(list(self.fonts.values()))
         font_size = np.random.choice(self.font_sizes[0], p=self.font_sizes[1])
 
         for _ in range(sequence_len):
             random_font = np.random.choice(font[0], p=font[1])
+            #print(random_font.get_font_name())
             sequences.append(
                 [
                     *self.word_renderer.word_render(
@@ -105,7 +106,7 @@ class SequenceGenerator:
                             font_size,
                             self.augmenters,
                         ),
-                    int("bold" in random_font.get_font_type())
+                    int("bold" in random_font.get_font_name().lower())
                 ]
             )
         return sequences
