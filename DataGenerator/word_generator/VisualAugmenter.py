@@ -1,4 +1,4 @@
-from .IVisualAugmenter import IVisualAugmenter
+from IVisualAugmenter import IVisualAugmenter
 from typing import Any, List, Tuple
 import numpy as np
 import cv2

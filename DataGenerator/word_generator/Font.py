@@ -1,4 +1,4 @@
-from .IFont import IFont
+from IFont import IFont
 import os
 
 class Font(IFont):
