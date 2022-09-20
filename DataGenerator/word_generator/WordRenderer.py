@@ -23,7 +23,7 @@ class WordRenderer(IWordRenderer):
 
         left, top, right, bottom = font.getbbox(word)
         width = right - left
-        height = top - bottom
+        height = bottom - top
 
         img = Image.new('RGBA', (width, height), (255, 255, 255))
         img_draw = ImageDraw.Draw(img)
