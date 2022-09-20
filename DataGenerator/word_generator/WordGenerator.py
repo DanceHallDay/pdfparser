@@ -31,5 +31,6 @@ class WordGenerator(IWordGenerator):
                     re.sub(f"[^{vocab}]", "", word)
                     for line in f.readlines()
                     for word in line.split()
+                    if re.sub(f"[^{vocab}]", "", word) != '' 
                 ]
             )
