@@ -1,9 +1,4 @@
-from DataGenerator.word_storage.utils import filter_uniq, save_words
-
-def get_text(path):
-    with open(path, "r") as text_file:
-        text = text_file.read()
-    return text
+from DataGenerator.word_storage.utils import filter_uniq, save_words, get_text
 
 
 if __name__ == '__main__':
