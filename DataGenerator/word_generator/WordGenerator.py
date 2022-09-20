@@ -1,4 +1,4 @@
-from IWordGenerator import IWordGenerator
+from DataGenerator.word_generator.IWordGenerator import IWordGenerator
 from typing import List
 import re
 import numpy as np

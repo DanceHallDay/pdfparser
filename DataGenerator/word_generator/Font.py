@@ -1,4 +1,4 @@
-from .IFont import IFont
+from DataGenerator.word_generator.IFont import IFont
 import os
 
 class Font(IFont):

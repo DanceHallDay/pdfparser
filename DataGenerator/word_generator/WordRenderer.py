@@ -1,5 +1,9 @@
-from IWordRenderer import *
+from DataGenerator.word_generator.IWordRenderer import IWordRenderer
+from DataGenerator.word_generator.IVisualAugmenter import IVisualAugmenter
+from DataGenerator.word_generator.IFont import IFont
 from PIL import ImageFont, Image, ImageDraw
+from typing import List, Tuple
+import numpy as np
 
 
 class WordRenderer(IWordRenderer):
