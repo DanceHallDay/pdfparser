@@ -79,9 +79,3 @@ class RenderedTextGenerator():
             type_arr.append(fonttype)
 
         return np.array(img_arr), np.array(type_arr)
-
-
-rtg = RenderedTextGenerator(batch_size=64, fontsize_range=(5, 30), fonts_folder='fonts/', img_shape=(128, 128),
-                            fonttype='bold')
-imgs, txts = rtg.render_text('img.png')
-print(txts[-1])
