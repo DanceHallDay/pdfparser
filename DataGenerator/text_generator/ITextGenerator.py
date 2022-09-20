@@ -3,13 +3,11 @@ from DataGenerator.word_generator.IFont import IFont
 from DataGenerator.word_generator.IVisualAugmenter import IVisualAugmenter
 from DataGenerator.word_generator.IWordGenerator import IWordGenerator
 from DataGenerator.word_generator.IWordRenderer import IWordRenderer
-
 import numpy as np
 from typing import List, Tuple
 
-
 class ITextGenerator(ABC):
-    def initialize(
+    def __init__(
         self,
         fonts: Tuple[List[IFont], np.array],
         font_sizes: Tuple[List[int], np.array],
@@ -18,7 +16,7 @@ class ITextGenerator(ABC):
         word_renderer: IWordRenderer,
         *args,
         **kwargs
-    ) -> None:
+    ):
         """
         Set up generator settings.
         @fonts - tuple of fonts and their PDF fucntion,
