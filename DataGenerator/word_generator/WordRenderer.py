@@ -1,3 +1,5 @@
+import os
+
 from IWordRenderer import *
 from PIL import ImageFont, Image, ImageDraw
 
@@ -14,7 +16,7 @@ class WordRenderer(IWordRenderer):
             **kwargs
     ) -> Tuple[np.array, str, List[int], List[int]]:
 
-        font_name = font.get_font_name()
+        font_name = os.path.abspath(font.get_font_name())
 
         font = ImageFont.truetype(
             font=font_name,
