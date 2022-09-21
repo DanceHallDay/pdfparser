@@ -5,21 +5,13 @@ import numpy as np
 from typing import List, Tuple
 
 
-
 class IWordRenderer(ABC):
     def word_render(
-            self,
-            word: str,
-            font: IFont,
-            font_size: int,
-            augmenters: List[IVisualAugmenter],
-            *args,
-            **kwargs
-    ) -> Tuple[np.array, str, List[int], List[int]]:
+        self, word: str, font: IFont, font_size: int, *args, **kwargs
+    ) -> Tuple[np.array, str, np.array, np.array]:
         """
         Renders @word into numpy array with shape (h,w) and dtype=uint8.
-        Applies @augmenters to the generated image.
-        Returns augmented image, word, x-coordinate of the start of each word's letter,
+        Returns image, word, x-coordinate of the start of each word's letter,
         and x-coordinate of the end of each word's letter
         """
         pass

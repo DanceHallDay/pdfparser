@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 
 
 def generate(font_path, wl_path, n):
-    font = Font().load_font(font_path)
+    font = Font()
+    font.load_font(font_path)
 
     word_generator = WordGenerator()
     word_generator.word_storage_load(wl_path, VOCABS["english"])
@@ -53,5 +54,3 @@ if __name__ == "__main__":
 
     plt.imshow(samples[0][0])
     plt.show()
-
-

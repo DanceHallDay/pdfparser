@@ -6,6 +6,7 @@ from DataGenerator.word_generator.IWordRenderer import IWordRenderer
 import numpy as np
 from typing import List, Tuple
 
+
 class TextGenerator(ITextGenerator):
     def __init__(
         self,
@@ -23,13 +24,13 @@ class TextGenerator(ITextGenerator):
         self.word_generator = word_generator
         self.word_renderer = word_renderer
 
-    def generate(self, n: int) -> List[IWordRenderer.word_render]:
+    def generate(self, n: int) -> List[str, IWordRenderer.word_render]:
         return [
             self.word_renderer.word_render(
                 self.word_generator.word_generate(1),
                 np.random.choice(self.fonts[0], p=self.fonts[1]),
                 np.random.choice(self.font_sizes[0], p=self.font_sizes[1]),
-                self.augmenters
+                self.augmenters,
             )
             for _ in range(n)
         ]

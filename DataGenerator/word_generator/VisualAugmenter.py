@@ -5,21 +5,17 @@ import cv2
 
 
 class VisualAugmenterRotation(IVisualAugmenter):
-    def __init__(
-        self, 
-        lower: float, 
-        upper: float
-        ):
+    def __init__(self, lower: float, upper: float):
         """Generate random angle and rotate image by this angel.
         lower: float
             lower angle bound
         upper: float
             upper angle bound
-            
+
         """
         self.lower = lower
         self.upper = upper
-    
+
     def transform_coords(self, coords, M, h):
         coords = coords.reshape(-1, 1)
         a = np.array([[h, 1]] * len(coords))
@@ -29,11 +25,8 @@ class VisualAugmenterRotation(IVisualAugmenter):
         return coords
 
     def augment(
-            self, 
-            img: np.array, 
-            starts_x: np.array, 
-            ends_x: np.array
-        ) -> Tuple[np.array, np.array, np.array]:
+        self, img: np.array, starts_x: np.array, ends_x: np.array
+    ) -> Tuple[np.array, np.array, np.array]:
         angle = np.random.randint(self.lower, self.upper)
         (h, w) = img.shape[:2]
         center = (w // 2, h // 2)
@@ -41,18 +34,16 @@ class VisualAugmenterRotation(IVisualAugmenter):
         M = cv2.getRotationMatrix2D(center, angle, 1.0)
         img = cv2.warpAffine(img, M, (w, h))
         img = cv2.bitwise_not(img)
-        return img, \
-            self.transform_coords(starts_x, M, center[1]), \
-            self.transform_coords(ends_x, M, center[1])
+        return (
+            img,
+            self.transform_coords(starts_x, M, center[1]),
+            self.transform_coords(ends_x, M, center[1]),
+        )
 
 
 class VisualAugmenterGaussianNoise(IVisualAugmenter):
-    def __init__(
-            self, 
-            mean: float, 
-            std: float
-        ):
-        """ Add gaussian noise to an image
+    def __init__(self, mean: float, std: float):
+        """Add gaussian noise to an image
         mean: float
             Mean of the distribution.
         std: float
@@ -62,22 +53,15 @@ class VisualAugmenterGaussianNoise(IVisualAugmenter):
         self.std = std
 
     def augment(
-            self, 
-            img: np.array, 
-            starts_x: np.array, 
-            ends_x: np.array
-        ) -> Tuple[np.array, np.array, np.array]:
+        self, img: np.array, starts_x: np.array, ends_x: np.array
+    ) -> Tuple[np.array, np.array, np.array]:
         gaussian = np.random.normal(self.mean, self.std, img.shape).astype(np.uint8)
         img = img + gaussian
         return img, starts_x, ends_x
 
 
 class VisualAugmenterStretching(IVisualAugmenter):
-    def __init__(
-            self, 
-            dx: List[float], 
-            dy: List[float]
-        ):
+    def __init__(self, dx: List[float], dy: List[float]):
         """Applies ыtretching along x and y axes.
         dx: List[float, float]
             Scale range along x axe. lower bound must be > 0.
@@ -87,18 +71,15 @@ class VisualAugmenterStretching(IVisualAugmenter):
         """
         self.dx = dx
         self.dy = dy
-    
+
     def transform_coords(self, coords, strt):
-        coords =  coords * strt
+        coords = coords * strt
         coords = coords.astype(int)
         return coords
 
     def augment(
-            self, 
-            img: np.array, 
-            starts_x: np.array, 
-            ends_x: np.array
-        ) -> Tuple[np.array, np.array, np.array]:
+        self, img: np.array, starts_x: np.array, ends_x: np.array
+    ) -> Tuple[np.array, np.array, np.array]:
         rxl, rxu = int(self.dx[0] * 100), int(self.dx[1] * 100)
         ryl, ryu = int(self.dy[0] * 100), int(self.dy[1] * 100)
 
@@ -107,17 +88,15 @@ class VisualAugmenterStretching(IVisualAugmenter):
         width = int(img.shape[1] * strt_x)
         height = int(img.shape[0] * strt_y)
         img = cv2.resize(img, (width, height))
-        return img, \
-            self.transform_coords(starts_x, strt_x), \
-            self.transform_coords(ends_x, strt_x)          
+        return (
+            img,
+            self.transform_coords(starts_x, strt_x),
+            self.transform_coords(ends_x, strt_x),
+        )
 
 
 class VisualAugmenterErosion(IVisualAugmenter):
-    def __init__(
-            self, 
-            iteration: int, 
-            kernel_size_range: List[int]
-        ):
+    def __init__(self, iteration: int, kernel_size_range: List[int]):
         """Erodes an image by using a specific structuring element.
         iterations: int
             number of times erosion is applied.
@@ -128,11 +107,8 @@ class VisualAugmenterErosion(IVisualAugmenter):
         self.kernel_size_range = kernel_size_range
 
     def augment(
-            self, 
-            img: np.array,  
-            starts_x: np.array, 
-            ends_x: np.array
-        ) -> Tuple[np.array, np.array, np.array]:
+        self, img: np.array, starts_x: np.array, ends_x: np.array
+    ) -> Tuple[np.array, np.array, np.array]:
         w = np.random.randint(*self.kernel_size_range)
         h = np.random.randint(*self.kernel_size_range)
         kernel = np.random.choice([0, 1], size=(w, h)).astype(np.uint8)
@@ -141,11 +117,7 @@ class VisualAugmenterErosion(IVisualAugmenter):
 
 
 class VisualAugmenterDilation(IVisualAugmenter):
-    def __init__(
-        self, 
-        iteration: int, 
-        kernel_range: List[int]
-        ):
+    def __init__(self, iteration: int, kernel_range: List[int]):
         """Dilates an image by using a specific structuring element.
         iterations: int
             number of times dilation is applied.
@@ -156,11 +128,8 @@ class VisualAugmenterDilation(IVisualAugmenter):
         self.kernel_range = kernel_range
 
     def augment(
-            self, 
-            img: np.array,  
-            starts_x: np.array, 
-            ends_x: np.array
-        ) -> Tuple[np.array, np.array, np.array]:
+        self, img: np.array, starts_x: np.array, ends_x: np.array
+    ) -> Tuple[np.array, np.array, np.array]:
         w = np.random.randint(*self.kernel_range)
         h = np.random.randint(*self.kernel_range)
         kernel = np.random.choice([0, 1], size=(w, h)).astype(np.uint8)
